@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = STLExtract::VERSION
   spec.authors       = ["Thomas Preece"]
   spec.email         = ["t.preece@warwick.ac.uk"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = 'Extracts data from STL file using Slic3r'
+  spec.description   = 'Extracts x,y,z and volume data from STL file using Slic3r'
   spec.homepage      = ""
   spec.license       = "MIT"
 
