@@ -30,13 +30,14 @@ Then use the following command to get info about a file specified as an argument
 
 ```ruby
  s.get_info("C:/Users/Tom/Documents/champagne_bottle.stl")
- ```
+```
 
 Should there be any errors with getting the details from the file then you can retrieve the error from 
 
 ```ruby
 s.error
 ```
+
 The error will be a string value containing text about the error or -1 if the program ran correctly and there was no error. If there was no errors then you can access x,y,z,volume and if file needs repair using
 
 ```ruby
