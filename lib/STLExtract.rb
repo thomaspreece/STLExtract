@@ -16,10 +16,13 @@ class StlExtract
 		#Mac\Slic3r.app\Contents\MacOS\slic3r
 		puts RUBY_PLATFORM
 		if OS.windows?
+			
 			io = IO.popen(gemPath+'/Slic3r/Win/slic3r-console.exe --info '+file+" 2>&1")
 		elsif OS.mac?
+			puts File.chmod(0777,gemPath+'/Slic3r/Mac/Slic3r.app/Contents/MacOS/slic3r')
 			io = IO.popen(gemPath+'/Slic3r/Mac/Slic3r.app/Contents/MacOS/slic3r --info '+file+" 2>&1")
 		elsif OS.linux?
+			puts File.chmod(0777,gemPath+'/Slic3r/Linux/bin/slic3r')
 			io = IO.popen(gemPath+'/Slic3r/Linux/bin/slic3r --info '+file+" 2>&1")
 		else
 			#RuntimeError?
