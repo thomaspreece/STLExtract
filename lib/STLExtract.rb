@@ -70,11 +70,12 @@ class StlExtract
 				@error = "Corrupted file: "+file
 			end
 			
-			#Check that all required data is extracted
-			if (@x_value==-1 || @y_value==-1  || @z_value==-1 || @volume==-1 )
-				@error = "Could not extract all data"
-			end
 		end
+		
+		#Check that all required data is extracted
+		if (@x_value==-1 || @y_value==-1 || @z_value==-1 || @volume==-1 )
+			@error = "Could not extract all data"
+		end		
 	end
   
 	def x_value()
