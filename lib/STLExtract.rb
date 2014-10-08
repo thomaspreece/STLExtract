@@ -69,11 +69,10 @@ class StlExtract
 			if s.include? "The file"
 				@error = "Corrupted file: "+file
 			end
-			
 		end
 		
 		#Check that all required data is extracted
-		if (@x_value==-1 || @y_value==-1 || @z_value==-1 || @volume==-1 )
+		if ((@x_value==-1 || @y_value==-1 || @z_value==-1 || @volume==-1 ) && @error == -1)
 			@error = "Could not extract all data"
 		end		
 	end
