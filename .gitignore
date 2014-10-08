@@ -10,4 +10,5 @@
 mkmf.log
 new.bat
 new.rb
-STLExtract*gem
+*.gem
+
