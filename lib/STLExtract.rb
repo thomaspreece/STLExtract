@@ -14,6 +14,7 @@ class StlExtract
 		#Open slic3r with filename supplied
 		
 		#Mac\Slic3r.app\Contents\MacOS\slic3r
+		puts RUBY_PLATFORM
 		if OS.windows?
 			io = IO.popen(gemPath+'/Slic3r/Win/slic3r-console.exe --info '+file+" 2>&1")
 		elsif OS.mac?
