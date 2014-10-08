@@ -2,44 +2,28 @@ require "STLExtract/version"
 require 'io/console'
 
 class StlExtract 
-
-	def initialize(file)
-		#Set our values to -1 
+	def repair_file(file)
+		@error = -1
+		
+		io = IO.popen(@slic3r_path+' --repair '+file+" 2>&1")
+		io.each do |s|
+			if s.include? "No such file"
+				@error = "Incorrect filename"
+			end
+		end
+	end
+	
+	def get_info(file)
+		#reset initial values to -1 
 		@x_value = -1
 		@y_value = -1
 		@z_value = -1
-		@volume = -1  
+		@volume = -1 
+		@repair = -1
 		@error = -1
-		#Find gem location
-		gemPath = File.expand_path('../../', __FILE__)	
-
-		if OS.windows?
-			#Open slic3r with filename supplied
-			io = IO.popen(gemPath+'/Slic3r/Win/slic3r-console.exe --info '+file+" 2>&1")
-		elsif OS.mac?
-			#Set file to be executable
-			if File.chmod(0744,gemPath+'/Slic3r/Mac/Slic3r.app/Contents/MacOS/slic3r')
-				#Open slic3r with filename supplied
-				io = IO.popen(gemPath+'/Slic3r/Mac/Slic3r.app/Contents/MacOS/slic3r --info '+file+" 2>&1")
-			else
-				#RuntimeError
-				raise "Could not make Slic3r executable"
-			end
-		elsif OS.linux?
-			#Open slic3r with filename supplied
-			if File.chmod(0744,gemPath+'/Slic3r/Linux/bin/slic3r')
-				#Execute file
-				io = IO.popen(gemPath+'/Slic3r/Linux/bin/slic3r --info '+file+" 2>&1")
-			else
-				#RuntimeError
-				raise "Could not make Slic3r executable"				
-			end
-		else
-			#RuntimeError
-			raise "Could not detect platform from: "+RUBY_PLATFORM
-		end
 		
-		
+		#Open slic3r with filename supplied
+		io = IO.popen(@slic3r_path+' --info '+file+" 2>&1")
 		
 		io.each do |s|
 			#If output contains size, extract size information using regex
@@ -49,6 +33,17 @@ class StlExtract
 					@x_value = sizeMatch.values_at( 1 )[0]
 					@y_value = sizeMatch.values_at( 2 )[0]
 					@z_value = sizeMatch.values_at( 3 )[0]
+				end
+			end
+			#If output contains repair stats
+			if s.include? "needed repair"
+				sizeMatch = s.match( /needed repair:[^y]+(yes|no)/ )
+				if sizeMatch!=nil 
+					if sizeMatch.values_at( 1 )[0]=="yes"
+						@repair = 1
+					else
+						@repair = 0
+					end
 				end
 			end
 			#If output contains volume, extract volume information using regex
@@ -72,32 +67,68 @@ class StlExtract
 		end
 		
 		#Check that all required data is extracted
-		if ((@x_value==-1 || @y_value==-1 || @z_value==-1 || @volume==-1 ) && @error == -1)
+		if ((@x_value==-1 || @y_value==-1 || @z_value==-1 || @volume==-1 || @repair==-1 ) && @error == -1)
 			@error = "Could not extract all data"
+		end	
+	end
+	
+	def initialize()
+		#Set our initial values to -1 
+		@x_value = -1
+		@y_value = -1
+		@z_value = -1
+		@volume = -1 
+		@repair = -1
+		@error = -1
+		
+		#Find Slic3r location
+		@slic3r_path = File.expand_path('../../', __FILE__)
+		if OS.windows?
+			@slic3r_path = @slic3r_path + '/Slic3r/Win/slic3r-console.exe'
+		elsif OS.mac?
+			@slic3r_path = @slic3r_path + '/Slic3r/Mac/Slic3r.app/Contents/MacOS/slic3r'
+		elsif OS.linux?
+			@slic3r_path = @slic3r_path + '/Slic3r/Linux/bin/slic3r'
+		else
+			#RuntimeError
+			raise "Could not detect platform from: "+RUBY_PLATFORM
 		end		
+		
+		#Unix systems (Mac and Linux) require that file be executable
+		if OS.unix?
+			if File.chmod(0744,@slic3r_path) == 0
+				#RuntimeError
+				raise "Could not make Slic3r executable"
+			end
+		end	
 	end
   
-	def x_value()
+	def get_x_value()
 		#Return stored x value
 		@x_value
 	end
   
-	def y_value()
+	def get_y_value()
 		#Return stored y value
 		@y_value
 	end
 
-	def z_value()
+	def get_z_value()
 		#Return stored z value
 		@z_value
 	end
 
-	def volume()
+	def get_volume()
 		#Return stored volume
 		@volume
 	end  
-
-	def error()
+	
+	def get_repair()
+		#Return stored volume
+		@repair
+	end  
+	
+	def get_error()
 		#Return stored volume
 		@error
 	end  	
