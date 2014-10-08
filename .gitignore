@@ -7,8 +7,7 @@
 /pkg/
 /spec/reports/
 /tmp/
-*.bundle
-*.so
-*.o
-*.a
 mkmf.log
+new.bat
+new.rb
+STLExtract*gem
