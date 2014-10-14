@@ -20,7 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-First create a new StlExtract object using the following command
+First create a new StlExtract object using the following command.
 
 ```ruby
 s = StlExtract.new()
@@ -32,20 +32,26 @@ Then use the following command to get info about a file specified as an argument
  s.get_info("C:/Users/Tom/Documents/champagne_bottle.stl")
 ```
 
+You can automate the above two commands by specifying the optional file path in the new construct as shown below
+
+```ruby
+s = StlExtract.new("C:/Users/Tom/Documents/champagne_bottle.stl")
+```
+
 Should there be any errors with getting the details from the file then you can retrieve the error from 
 
 ```ruby
-s.get_error
+s.error
 ```
 
-The error will be a string value containing text about the error or -1 if the program ran correctly and there was no error. If there was no errors then you can access x,y,z,volume and if file needs repair using
+The error will be a string value containing text about the error or false if the program ran correctly and there was no error. If there was no errors then you can access x,y,z,volume and if file needs repair using
 
 ```ruby
-s.get_x_value
-s.get_y_value
-s.get_z_value
-s.get_volume
-s.get_repair
+s.x
+s.y
+s.z
+s.volume
+s.repair
 ```
 
 Should the STL file need repairing we can use the following command
@@ -54,7 +60,8 @@ Should the STL file need repairing we can use the following command
 s.repair_file("C:/Users/Tom/Documents/champagne_bottle.stl")
 ```
 
-to create a fixed file named [OrginalName]_fixed.obj so in our above example we will now have a file named champagne_bottle_fixed.obj in C:/Users/Tom/Documents/
+to create a fixed file named [OrginalName]_fixed.obj so in our above example we will now have a file named champagne_bottle_fixed.obj in C:/Users/Tom/Documents/.
+If no argument is given to repair_file it automatically uses the last string passed to new() or get_info()
 
 
 ## Contributing

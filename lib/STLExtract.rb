@@ -2,28 +2,47 @@ require "STLExtract/version"
 require 'io/console'
 
 class StlExtract 
-	def repair_file(file)
-		@error = -1
+	def repair_file(file=nil)
+		@error = false
 		
-		io = IO.popen(@slic3r_path+' --repair '+file+" 2>&1")
-		io.each do |s|
-			if s.include? "No such file"
-				@error = "Incorrect filename"
+		if file==nil
+			#Check for file to repair in local @file
+			if @file!=nil
+				#Use file found in @file to repair
+				file = @file
+			else
+				#No file provided, give error
+				@error = "No file provided to repair"
+			end
+		else
+			#Use file provided to function in repair
+		end
+		
+		#If no errors, repair file
+		if @error == false
+			io = IO.popen(@slic3r_path+" --repair \""+file+"\" 2>&1")
+			io.each do |s|
+				if s.include? "No such file"
+					@error = "Incorrect filename"
+				end
 			end
 		end
 	end
 	
 	def get_info(file)
-		#reset initial values to -1 
-		@x_value = -1
-		@y_value = -1
-		@z_value = -1
-		@volume = -1 
-		@repair = -1
-		@error = -1
+		#Set @file to use later in repair
+		@file = file
+	
+		#Set our initial values to nil and false for error
+		@x_value = nil
+		@y_value = nil
+		@z_value = nil
+		@volume = nil
+		@repair = nil
+		@error = false
 		
 		#Open slic3r with filename supplied
-		io = IO.popen(@slic3r_path+' --info '+file+" 2>&1")
+		io = IO.popen(@slic3r_path+" --info \""+file+"\" 2>&1")
 		
 		io.each do |s|
 			#If output contains size, extract size information using regex
@@ -40,9 +59,9 @@ class StlExtract
 				sizeMatch = s.match( /needed repair:[^y]+(yes|no)/ )
 				if sizeMatch!=nil 
 					if sizeMatch.values_at( 1 )[0]=="yes"
-						@repair = 1
+						@repair = true
 					else
-						@repair = 0
+						@repair = false
 					end
 				end
 			end
@@ -67,19 +86,19 @@ class StlExtract
 		end
 		
 		#Check that all required data is extracted
-		if ((@x_value==-1 || @y_value==-1 || @z_value==-1 || @volume==-1 || @repair==-1 ) && @error == -1)
+		if ((@x_value==nil || @y_value==nil || @z_value==nil || @volume==nil || @repair==nil ) && @error == false)
 			@error = "Could not extract all data"
 		end	
 	end
 	
-	def initialize()
-		#Set our initial values to -1 
-		@x_value = -1
-		@y_value = -1
-		@z_value = -1
-		@volume = -1 
-		@repair = -1
-		@error = -1
+	def initialize(file=nil)
+		#Set our initial values to nil and false for error 
+		@x_value = nil
+		@y_value = nil
+		@z_value = nil
+		@volume = nil
+		@repair = nil
+		@error = false
 		
 		#Find Slic3r location
 		@slic3r_path = File.expand_path('../../', __FILE__)
@@ -101,34 +120,38 @@ class StlExtract
 				raise "Could not make Slic3r executable"
 			end
 		end	
+		
+		if file!=nil
+			get_info(file)
+		end
 	end
   
-	def get_x_value()
+	def x()
 		#Return stored x value
 		@x_value
 	end
   
-	def get_y_value()
+	def y()
 		#Return stored y value
 		@y_value
 	end
 
-	def get_z_value()
+	def z()
 		#Return stored z value
 		@z_value
 	end
 
-	def get_volume()
+	def volume()
 		#Return stored volume
 		@volume
 	end  
 	
-	def get_repair()
+	def repair()
 		#Return stored volume
 		@repair
 	end  
 	
-	def get_error()
+	def error()
 		#Return stored volume
 		@error
 	end  	

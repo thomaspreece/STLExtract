@@ -7,10 +7,10 @@ Gem::Specification.new do |spec|
   spec.name          = "STLExtract"
   spec.version       = STLExtract::VERSION
   spec.authors       = ["Thomas Preece"]
-  spec.email         = ["t.preece@warwick.ac.uk"]
+  spec.email         = ["RubyGems@thomaspreece.com"]
   spec.summary       = 'Extracts data from STL, OBJ and AMF files using Slic3r'
   spec.description   = 'Extracts x,y,z and volume data from STL, OBJ and AMF files using Slic3r'
-  spec.homepage      = "http://thomaspreece.com"
+  spec.homepage      = ["http://thomaspreece.com","https://github.com/thomaspreece10/STLExtract/"]
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
