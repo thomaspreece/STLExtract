@@ -2,6 +2,12 @@ require "STLExtract/version"
 require 'io/console'
 
 class StlExtract 
+	
+	# Takes a 3D data file and repairs any problems it finds with the given file so file can be printed.
+	# Takes: 
+	#	file - (Optional) If provided function uses given filepath as the file to repair. Otherwise it uses last used filepath in initialize or get_info functions.
+	# Returns:
+	#	Nothing	
 	def repair_file(file=nil)
 		@error = false
 		
@@ -29,6 +35,11 @@ class StlExtract
 		end
 	end
 	
+	# Takes a 3D data file and gets information about the file such as width (x), height (y), depth (z), volume and whether file needs repair before it can be printed
+	# Takes: 
+	#	file - Uses given filepath as the file to get info from.
+	# Returns:
+	#	Nothing		
 	def get_info(file)
 		#Set @file to use later in repair
 		@file = file
@@ -91,6 +102,11 @@ class StlExtract
 		end	
 	end
 	
+	# Sets up class and Slic3r location, throwing errors if files are missing and also retrieves info about file if 'file' argument provided
+	# Takes: 
+	#	file - (Optional) Uses given filepath as the file to get info from after class is setup.
+	# Returns:
+	#	Nothing		
 	def initialize(file=nil)
 		#Set our initial values to nil and false for error 
 		@x_value = nil
@@ -125,40 +141,71 @@ class StlExtract
 			get_info(file)
 		end
 	end
-  
+
+	# Returns x value set by get_info and initialize function
+	# Takes: 
+	#	Nothing
+	# Returns:
+	#	Returns x		
 	def x()
 		#Return stored x value
 		@x_value
 	end
-  
+
+	# Returns y value set by get_info and initialize function
+	# Takes: 
+	#	Nothing
+	# Returns:
+	#	Returns y	
 	def y()
 		#Return stored y value
 		@y_value
 	end
 
+	# Returns z value set by get_info and initialize function
+	# Takes: 
+	#	Nothing
+	# Returns:
+	#	Returns z
 	def z()
 		#Return stored z value
 		@z_value
 	end
 
+	# Returns volume value set by get_info and initialize function
+	# Takes: 
+	#	Nothing
+	# Returns:
+	#	Returns volume
 	def volume()
 		#Return stored volume
 		@volume
 	end  
-	
+
+	# Returns whether file analysed by get_info and initialize functions needs repair
+	# Takes: 
+	#	Nothing
+	# Returns:
+	#	Returns repair status
 	def repair()
 		#Return stored volume
 		@repair
 	end  
-	
+
+	# Returns error string set by get_info and initialize functions
+	# Takes: 
+	#	Nothing
+	# Returns:
+	#	Returns error	
 	def error()
-		#Return stored volume
+		#Return error
 		@error
 	end  	
 end
 
 
-
+# Module to detect platform being used
+# Useful as depending on platform a different version of Slic3r must be used
 module OS
   def OS.windows?
     (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil

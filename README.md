@@ -1,6 +1,6 @@
 # STLExtract
 
-This is a gem that extracts various data about the 3d models contained in STL, OBJ and AMF files.
+This is a gem that extracts various data about the 3d models contained in STL, OBJ and AMF files. It makes use of the multi-platform Slic3r program to extract data and works fine on Windows, Mac and Linux. It was orginally developed for a 3D printer marketplace built on Ruby on Rails.
 
 ## Installation
 
